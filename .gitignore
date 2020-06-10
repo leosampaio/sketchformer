@@ -20,3 +20,4 @@ submit_files/
 bumblebee.submit_file
 docker/
 *.secret
+pretrained/
