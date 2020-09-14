@@ -1,4 +1,3 @@
-import metrics
 import argparse
 import pprint
 
@@ -21,7 +20,7 @@ def main():
                         help="Parameters to override defaults for experiment")
     parser.add_argument("--model-hparams", default=None,
                         help="Parameters to override defaults for model")
-    parser.add_argument("-g", "--gpu", default=0, type=int, help="GPU ID to run on", )
+    parser.add_argument("-g", "--gpu", default=0, type=int, nargs='+', help="GPU ID to run on", )
 
     parser.add_argument("--model-name", default=None,
                         help="Model that ou want to experiment on")
@@ -33,7 +32,7 @@ def main():
                         "if you want to load a model")
     parser.add_argument("--dataset", default=None,
                         help="Input data folder if you want to load a model")
-
+    parser.add_argument("-r", "--resume", default='latest', help="One of 'latest' or a checkpoint name")
     parser.add_argument("--help-hps", action="store_true",
                         help="Prints out the hparams default values")
     args = parser.parse_args()
@@ -65,7 +64,7 @@ def main():
 
         dataset = DataLoader(model_hps, args.dataset)
         model = Model(model_hps, dataset, args.output_dir, args.model_id)
-        model.restore_checkpoint_if_exists()
+        model.restore_checkpoint_if_exists(args.resume)
     else:
         dataset, model = None, None
 

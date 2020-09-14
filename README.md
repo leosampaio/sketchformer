@@ -11,8 +11,6 @@ This repository contains the official TensorFlow 2.X implementation of the follo
 
 > Leo Sampaio Ferraz Ribeiro (ICMC/USP), Tu Bui (CVSSP/University of Surrey), John Collomosse (CVSSP/University of Surrey and Adobe Research), Moacir Ponti (ICMC/USP)
 
-> University of Surrey
-
 > Abstract: Sketchformer is a novel transformer-based representation for encoding free-hand sketches input in a vector form, i.e. as a sequence of strokes. Sketchformer effectively addresses multiple tasks: sketch classification, sketch based image retrieval (SBIR), and the reconstruction and interpolation of sketches. We report several variants exploring continuous and tokenized input representations, and contrast their performance. Our learned embedding, driven by a dictionary learning tokenization scheme, yields state of the art performance in classification and image retrieval tasks, when compared against baseline representations driven by LSTM sequence to sequence architectures: SketchRNN and derivatives. We show that sketch reconstruction and interpolation are improved significantly by the Sketchformer embedding for complex sketches with longer stroke sequences.
 
 ## Preparing the Quickdraw Dataset
@@ -132,6 +130,32 @@ python evaluate-metrics.py sketch-transformer-tf2 \
 ```
 
 The `--resume` parameter can be either `none`, `latest` or a path. When using `latest`, make sure to use the same `--id` and `output_dir` that were used for training.
+
+## Embedding Extraction
+
+The `run-experiment.py` script can be used to run quick experiments if the user wants to implement one. We have included the `extract-embeddings` experiment to make it easy to use the pretrained models just for that. 
+
+Usage:
+```
+python run-experiment.py extract-embeddings \
+    --model-name sketch-transformer-tf2 \
+    --model-id id-of-model-youre-loading
+    --dataset /path/to/prepared/data \
+    -o /path/to/output/of/models/youre/loading --id test \
+    --gpu 0 --resume /path/to/checkpoint \
+    --exp-hparams params=for,this=experiment
+```
+
+Example where we load the continuous model from [Google Drive](https://drive.google.com/drive/folders/1sTAKRDkVeKY2ACLvseKNHUr6QonLBXHc?usp=sharing) and extract embeddings:
+```
+python run-experiment.py extract-embeddings \
+    --model-name sketch-transformer-tf2 \
+    --model-id cvpr_tform_cont \
+    --dataset /path/to/prepared/data \
+    -o /path/to/output/of/models/youre/loading --gpu 0 \
+    --resume /path/to/output/of/models/youre/loading/sketch-transformer-tf2-cvpr_tform_cont/weights/ckpt-12 \
+    --exp-hparams batch_size=256,target_file='some/path/embeddings.npz'
+```
 
 ## Pretrained Models
 
